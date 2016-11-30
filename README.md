@@ -35,8 +35,8 @@ Dirichlet Multinomial Mixture(DMM) is a unsupersived machine learning mathod tha
    2. Stemming using [Snowball Stemmer](http://snowball.tartarus.org/download.html) java version
    
 #Reference
-  1. [Jianhua Yin's GSDMM](https://github.com/jackyin12/GSDMM/tree/master/data) .
-  2. J. Yin and J. Wang. A dirichlet multinomial mixture model-based approach for short text clustering. In SIGKDD, 2014.[pdf](http://dbgroup.cs.tsinghua.edu.cn/wangjy/papers/KDD14-GSDMM.pdf) .
+  1. [Jianhua Yin's GSDMM](https://github.com/jackyin12/GSDMM) .
+  2. J. Yin and J. Wang. A dirichlet multinomial mixture model-based approach for short text clustering. In SIGKDD, 2014.[[pdf](http://dbgroup.cs.tsinghua.edu.cn/wangjy/papers/KDD14-GSDMM.pdf)]
   
 
  
