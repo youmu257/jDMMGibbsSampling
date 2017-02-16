@@ -96,7 +96,7 @@ public class DMM extends TopicModel{
 			int word_count_in_doc = 0;
 			for(Map.Entry<String, Integer> entry : word_in_doc.entrySet())
 			{
-				word_class new_word = new word_class(entry.getKey(), doc.distinct_words.indexOf(entry.getKey()), entry.getValue());
+				word_class new_word = new word_class(entry.getKey(), doc.distinct_words.get(entry.getKey()), entry.getValue());
 				tmp_z.word_list.add(new_word);
 				word_count_in_doc += entry.getValue();
 			}
@@ -224,7 +224,7 @@ public class DMM extends TopicModel{
 			Map<String,Double> tmp_map = new HashMap<String,Double>();
 			for(int word_index = 0; word_index < phi[topic_index].length; word_index++)
 			{
-				tmp_map.put(doc.distinct_words.get(word_index), phi[topic_index][word_index]);
+				tmp_map.put((String)doc.distinct_words_inverse.get(word_index), phi[topic_index][word_index]);
 			}
 			LinkedHashMap<String, Double> tmp = new LinkedHashMap<String, Double>();
 			tmp.putAll(MyJavaUtil.sortByComparatorDouble(tmp_map));
@@ -257,7 +257,7 @@ public class DMM extends TopicModel{
 			Map<String,Double> tmp_map = new HashMap<String,Double>();
 			for(int word_index = 0; word_index < phi[topic_index].length; word_index++)
 			{
-				tmp_map.put(doc.distinct_words.get(word_index), phi[topic_index][word_index]);
+				tmp_map.put((String)doc.distinct_words_inverse.get(word_index), phi[topic_index][word_index]);
 			}
 			LinkedHashMap<String, Double> tmp = new LinkedHashMap<String, Double>();
 			tmp.putAll(MyJavaUtil.sortByComparatorDouble(tmp_map));
@@ -323,7 +323,7 @@ public class DMM extends TopicModel{
 			Map<String,Double> tmp_map = new HashMap<String,Double>();
 			for(int word_index = 0; word_index < phi[topic_index].length; word_index++)
 			{
-				tmp_map.put(doc.distinct_words.get(word_index), phi[topic_index][word_index]);
+				tmp_map.put((String)doc.distinct_words_inverse.get(word_index), phi[topic_index][word_index]);
 			}
 			LinkedHashMap<String, Double> tmp = new LinkedHashMap<String, Double>();
 			tmp.putAll(MyJavaUtil.sortByComparatorDouble(tmp_map));
@@ -358,6 +358,31 @@ public class DMM extends TopicModel{
 		}
 		
 		bw.close();
+		
+		//write summation over words
+		bw = IO.Writer(path_result + "SW.csv");
+		//title
+		for(int topic_index = 0; topic_index < K; topic_index++)	
+			bw.write(topic_index+",");
+		bw.write("label\n");
+		
+		for(int doc_index = 0; doc_index < M; doc_index++)
+		{
+			ArrayList<word_class> wlist = z.get(doc_index).word_list;
+			for(int topic_index = 0; topic_index < K; topic_index++)	
+			{	
+				double doc_topic_p = 0.0;
+				for(word_class w : wlist)
+				{
+					double word_topic = (double)ntw[topic_index][w.word_id]/ntwSum[topic_index];
+					double relative_freq = (double)w.freq / z.get(doc_index).doc_size;
+					doc_topic_p += word_topic * relative_freq * w.freq;
+				}
+
+				bw.write(MyJavaUtil.round(doc_topic_p, 5)+",");
+			}
+			bw.write(z.get(doc_index).label+"\n");
+		}
+		bw.close();
 	}
-	
 }

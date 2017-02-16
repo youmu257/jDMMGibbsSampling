@@ -1,0 +1,4 @@
+alpha:1.25
+beta:0.1
+topicSize:40
+iteration:1000

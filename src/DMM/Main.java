@@ -8,14 +8,14 @@ import org.json.JSONException;
 public class Main {
 	private static String path = "data//DataInput//";
 	private static String path_output = "data//Result//";
-	private static int topci_num = 5;
+	private static int topci_num = 40;
 	
 	public static void main(String[] args) throws IOException, JSONException
 	{
 		//input data
 		Document doc = new Document();
 //		doc.setStemming(new englishStemmer());
-		doc.ReadCorpusJson(path+"S");
+		doc.ReadCorpusJson(path+"all_new.txt");
 		
 		/////////////////////////////////////////////////////////////////////////////////
 		//DMM gibbs sampling

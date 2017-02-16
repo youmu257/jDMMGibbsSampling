@@ -9,6 +9,9 @@ import java.util.HashMap;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
 import util.IO;
 
 public class Document {
@@ -16,7 +19,9 @@ public class Document {
 	//Stopword list
 	private ArrayList<String> stopword = new ArrayList<String>();
 	//Distinct words in all document (word : word_id)
-	public ArrayList<String> distinct_words = new ArrayList<String>();
+	public HashMap<String, Integer> distinct_words = new HashMap<String, Integer>();
+	//Distinct words in all document (word_id : word)
+	public BiMap distinct_words_inverse = HashBiMap.create();
 	//Contain all words in each document(*document *distinct word frequency)
 	public ArrayList<HashMap<String,Integer>> wordInDocument = new ArrayList<HashMap<String,Integer>>();
 	//Label for each document
@@ -92,10 +97,12 @@ public class Document {
 	{
 		long stime = System.currentTimeMillis();
 		readStopWord();
-
+		
+		IO.mkdir("data//Result//");
 		BufferedWriter bw = IO.Writer("data//Result//label.txt");
     	BufferedReader br = IO.Reader(file_path);
     	
+    	int word_id = 0;
     	String lin = "";
     	while((lin = br.readLine()) != null)
     	{
@@ -109,8 +116,10 @@ public class Document {
 //    			String word = word_origin;
     			if(word.length() == 0)
     				continue;
-    			else if(!distinct_words.contains(word))
-    				distinct_words.add(word);
+    			else if(!distinct_words.containsKey(word)){
+    				distinct_words.put(word, word_id);
+    				word_id++;
+    			}
     			
     			if(tmp_map.containsKey(word))
     				tmp_map.put(word, tmp_map.get(word)+1);
@@ -130,6 +139,9 @@ public class Document {
     	}
     	br.close();
     	bw.close();
+    	
+    	distinct_words_inverse.putAll(distinct_words);
+		distinct_words_inverse = distinct_words_inverse.inverse();
     	System.out.println("Read Json file done!\nSpend "+(System.currentTimeMillis()-stime)/1000+" s");
 	}
 	
